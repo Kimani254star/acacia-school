@@ -1,3 +1,4 @@
+AcaciaLogin.init({app:'school',name:'Acacia School',color:'#0b2447',price:800,landing:'landing.html'});
 /* Dark mode: follows the device setting until the toggle is used; choice is remembered. */
 (function(){var K='acacia_theme',r=document.documentElement,b=document.createElement('button');
 function cur(){var s;try{s=localStorage.getItem(K)}catch(e){}return s||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
@@ -27,10 +28,10 @@ const PORTALS={'Administration Portal':null,'Teacher Portal':['Dashboard','Acade
 const parse=s=>{const p=s.split('|'),f=[];for(let i=0;i<p.length;i++){const l=p[i],t=p[i+1]||'text';if(/^(date|time|number)$/.test(t)||t.startsWith('s:')){f.push({l,t,o:t.startsWith('s:')?t.slice(2).split(','):0});i++}else f.push({l,t:'text'})}return f};
 const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const lab=s=>s.replace(/([a-z])([A-Z])/g,'$1 $2');
-let S;try{S=JSON.parse(localStorage.getItem('acacia_school'))}catch(e){}
+let S;try{S=JSON.parse(localStorage.getItem('acacia_school_'+AcaciaLogin.companyId()))}catch(e){}
 if(!S)S={cur:'s1',schools:[{id:'s1',name:'My School'}],data:{s1:{}}};
 let mod='Dashboard',sub=null,portal='Administration Portal',q='';
-const save=()=>{try{localStorage.setItem('acacia_school',JSON.stringify(S))}catch(e){}};
+const save=()=>{try{localStorage.setItem('acacia_school_'+AcaciaLogin.companyId(),JSON.stringify(S))}catch(e){}};
 const D=(m,s)=>{const d=S.data[S.cur],k=m+'/'+s;return d[k]||(d[k]=[])};
 const today=new Date().toISOString().slice(0,10),ym=today.slice(0,7);
 const K=n=>'KES '+n.toLocaleString();

@@ -43,3 +43,5 @@ html[data-theme=dark] .tabs button.on{background:#19376d;color:#fff;border-color
 html[data-theme=dark] svg text{fill:#e8edf7}
 html[data-theme=dark] svg rect[fill="#0b2447"]{fill:#6f94e0}
 html[data-theme=dark] #themeBtn{background:#1f2937}
+body.acxsb-on #themeBtn{right:11rem}body.acxsb-on #aclOut{right:calc(11rem + 50px)}
+@media(max-width:700px){body.acxsb-on #themeBtn{right:62px}body.acxsb-on #aclOut{right:112px}}
