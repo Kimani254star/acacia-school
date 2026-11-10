@@ -1,29 +1,29 @@
-:root{color-scheme:light;--navy:#0b2447;--navy2:#19376d;--line:#d9dee8;--mute:#4a5568;--gold:#c9962b;--red:#a32b2b;--grn:#1d6b3d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:light;--navy:#16302A;--navy2:#1E4238;--line:#DCD7C6;--mute:#5B5A4E;--gold:#B98A2E;--red:#93412C;--grn:#2F6B45;--paper:#F1EFE5;--paper2:#E8E5D8;--card:#FFFEFA;--ink:#1C1B16;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:#fff;color:#000;font:15px/1.5 Cambria,Georgia,serif;display:flex;min-height:100vh}
-nav{width:250px;background:var(--navy);color:#dbe4f5;padding:14px 10px;position:sticky;top:0;height:100vh;overflow:auto;flex:none}
-.brand{color:#fff;font:700 20px Cambria,Georgia,serif;padding:2px 8px 10px}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 Cambria,Georgia,serif;display:flex;min-height:100vh}
+nav{width:250px;background:var(--navy);color:#D6D2C0;padding:14px 10px;position:sticky;top:0;height:100vh;overflow:auto;flex:none}
+.brand{color:#F4E9C9;font:700 20px Cambria,Georgia,serif;padding:2px 8px 10px}
 nav select{width:100%;margin-bottom:10px;padding:7px;border-radius:6px;border:0;font:inherit}
 nav button.m{display:block;width:100%;text-align:left;background:none;border:0;color:inherit;padding:8px 12px;border-radius:6px;font:inherit;cursor:pointer}
-nav button.m:hover{background:#ffffff1c}nav button.on{background:var(--navy2);color:#fff;font-weight:700}
+nav button.m:hover{background:#ffffff1c}nav button.on{background:rgba(255,255,255,.08);box-shadow:inset 3px 0 0 var(--gold);color:#F7EFD8;font-weight:600}
 main{flex:1;min-width:0;padding:22px 28px}
 .bar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 h1{font-size:26px;margin:0;color:var(--navy)}h3{margin:0 0 8px;color:var(--navy)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:18px}
-.st{border:1px solid var(--line);border-left:5px solid var(--navy);border-radius:6px;padding:12px}
+.st{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--navy);border-radius:6px;padding:12px}
 .st b{display:block;font-size:24px}.st span{color:var(--mute);font-size:13px}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
-.box{border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:14px}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.tabs button{border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:99px;padding:5px 14px;font:inherit;cursor:pointer}
+.tabs button{border:1px solid var(--navy);background:var(--card);color:var(--navy);border-radius:99px;padding:5px 14px;font:inherit;cursor:pointer}
 .tabs button.on{background:var(--navy);color:#fff}
 form{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;align-items:end}
 label{font-size:12px;color:var(--mute);display:block}
-input,select{width:100%;padding:8px;border:1px solid #aab3c5;border-radius:6px;font:inherit;background:#fff;color:#000}
-.btn{background:var(--navy);color:#fff;border:0;border-radius:6px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
+input,select{width:100%;padding:8px;border:1px solid #CFC9B4;border-radius:6px;font:inherit;background:var(--card);color:var(--ink)}
+.btn{background:var(--navy2);color:#fff;border:0;border-radius:6px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
 .del{background:none;border:0;color:var(--red);cursor:pointer;font:inherit}
 .wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:520px}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}th{background:#f1f4fa;color:var(--navy);font-size:13px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}th{background:var(--paper2);color:var(--navy);font-size:13px}
 .empty{color:var(--mute);padding:14px;text-align:center}ul{margin:0;padding-left:18px}li{margin-bottom:4px}
 .top{display:none}
 @media(max-width:760px){body{display:block}nav{display:none;position:fixed;inset:0 18% 0 0;z-index:5;height:auto}nav.open{display:block}
@@ -33,15 +33,14 @@ th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white
 nav select option{color:#000 !important}
 nav .brand{display:flex;align-items:center;gap:10px}
 #themeBtn{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:40;width:42px;height:42px;border-radius:50%;border:1px solid rgba(128,128,128,.45);background:var(--panel,#fff);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 2px 8px #0003}
-html[data-theme=dark]{color-scheme:dark;--line:#2f3b52;--mute:#aab6cc}
-html[data-theme=dark] body{background:#0f1726;color:#e8edf7}
-html[data-theme=dark] h1,html[data-theme=dark] h3{color:#9db8ee}
-html[data-theme=dark] input,html[data-theme=dark] select{background:#16213a;color:#e8edf7;border-color:#3a4864}
-html[data-theme=dark] th{background:#1a2640;color:#9db8ee}
-html[data-theme=dark] .tabs button{background:#0f1726;color:#9db8ee;border-color:#9db8ee}
-html[data-theme=dark] .tabs button.on{background:#19376d;color:#fff;border-color:#19376d}
-html[data-theme=dark] svg text{fill:#e8edf7}
-html[data-theme=dark] svg rect[fill="#0b2447"]{fill:#6f94e0}
+html[data-theme=dark]{color-scheme:dark;--line:#33453C;--mute:#A9AF9E;--gold:#D9A441;--red:#D98F6F;--grn:#5FBE81;--paper:#141F1A;--paper2:#1B2822;--card:#1E2B25;--ink:#EDEAD9}
+html[data-theme=dark] h1,html[data-theme=dark] h3{color:#7FD9A8}
+html[data-theme=dark] input,html[data-theme=dark] select{background:#1B2822;color:#EDEAD9;border-color:#3F5348}
+html[data-theme=dark] th{background:#1B2822;color:#7FD9A8}
+html[data-theme=dark] .tabs button{background:#141F1A;color:#7FD9A8;border-color:#7FD9A8}
+html[data-theme=dark] .tabs button.on{background:#295A4C;color:#fff;border-color:#295A4C}
+html[data-theme=dark] svg text{fill:#EDEAD9}
+html[data-theme=dark] svg rect[fill="#16302A"]{fill:#5FBE81}
 html[data-theme=dark] #themeBtn{background:#1f2937}
 body.acxsb-on #themeBtn{right:11rem}body.acxsb-on #aclOut{right:calc(11rem + 50px)}
 @media(max-width:700px){body.acxsb-on #themeBtn{right:62px}body.acxsb-on #aclOut{right:112px}}

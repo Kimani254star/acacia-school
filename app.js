@@ -1,4 +1,4 @@
-AcaciaLogin.init({app:'school',name:'Acacia School',color:'#0b2447',price:800,landing:'landing.html'});
+AcaciaLogin.init({app:'school',name:'Acacia School',color:'#16302A',price:800,landing:'landing.html'});
 /* Dark mode: follows the device setting until the toggle is used; choice is remembered. */
 (function(){var K='acacia_theme',r=document.documentElement,b=document.createElement('button');
 function cur(){var s;try{s=localStorage.getItem(K)}catch(e){}return s||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
@@ -46,8 +46,8 @@ function chart(){const pay=D('Fees & Finance','Payments'),ex=D('Fees & Finance',
 for(let i=5;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);ms.push(d.toISOString().slice(0,7))}
 const c=ms.map(m=>pay.filter(r=>r[2].startsWith(m)).reduce((a,r)=>a+r[1],0)),e=ms.map(m=>ex.filter(r=>r[2].startsWith(m)).reduce((a,r)=>a+r[1],0)),mx=Math.max(1,...c,...e);
 let s='<svg viewBox="0 0 420 190" width="100%" role="img" aria-label="Fee collection and expenses, last 6 months">';
-ms.forEach((m,i)=>{const x=20+i*66,h1=140*c[i]/mx,h2=140*e[i]/mx;s+='<rect x="'+x+'" y="'+(150-h1)+'" width="24" height="'+h1+'" fill="#0b2447"/><rect x="'+(x+26)+'" y="'+(150-h2)+'" width="24" height="'+h2+'" fill="#c9962b"/><text x="'+(x+25)+'" y="168" font-size="11" text-anchor="middle" fill="#000">'+m.slice(5)+'/'+m.slice(2,4)+'</text>'});
-return s+'</svg><div style="font-size:13px"><span style="color:#0b2447">■</span> Fee collection &nbsp; <span style="color:#c9962b">■</span> Expenses</div>'}
+ms.forEach((m,i)=>{const x=20+i*66,h1=140*c[i]/mx,h2=140*e[i]/mx;s+='<rect x="'+x+'" y="'+(150-h1)+'" width="24" height="'+h1+'" fill="#16302A"/><rect x="'+(x+26)+'" y="'+(150-h2)+'" width="24" height="'+h2+'" fill="#B98A2E"/><text x="'+(x+25)+'" y="168" font-size="11" text-anchor="middle" fill="#000">'+m.slice(5)+'/'+m.slice(2,4)+'</text>'});
+return s+'</svg><div style="font-size:13px"><span style="color:#16302A">■</span> Fee collection &nbsp; <span style="color:#B98A2E">■</span> Expenses</div>'}
 function nav(){const allow=PORTALS[portal];
 document.getElementById('nav').innerHTML='<div class="brand"><img src="logo.png" alt="Acacia logo" class="logo">Acacia School</div><select onchange="pick(this.value)">'+S.schools.map(s=>'<option value="'+s.id+'"'+(s.id==S.cur?' selected':'')+'>'+E(s.name)+'</option>').join('')+'<option value="+">+ Add school</option></select><select onchange="portal=this.value;mod=\'Dashboard\';sub=null;render()">'+Object.keys(PORTALS).map(p=>'<option'+(p==portal?' selected':'')+'>'+p+'</option>').join('')+'</select>'+MODS.filter(m=>!allow||allow.includes(m[0])).map(m=>'<button class="m '+(m[0]==mod?'on active':'')+'" onclick="go(\''+m[0]+'\')">'+m[0]+'</button>').join('')}
 function pick(v){if(v=='+'){const n=prompt('School name');if(n){const id='s'+Date.now();S.schools.push({id,name:n});S.data[id]={};S.cur=id}}else S.cur=v;save();render()}

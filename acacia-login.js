@@ -95,7 +95,7 @@
     cfg = c; AcaciaCloud.init({ app: c.app, dataKey: dataKey });
     style(); var s = ses();
     if (!s) { build(); return; }
-    var b = document.createElement('button'); b.id = 'aclOut'; b.type = 'button'; b.textContent = 'Sign out'; b.title = (s.name || s.email) + ' \u00b7 ' + (s.companyName || '');
+    var b = document.createElement('button'); b.id = 'aclOut'; b.type = 'button'; b.textContent = 'Log out'; b.title = (s.name || s.email) + ' \u00b7 ' + (s.companyName || '');
     b.onclick = function () { try { AcaciaCloud.stop(); } catch (e) {} localStorage.removeItem(KEY); location.reload(); };
     document.body.appendChild(b);
     var m = document.querySelector('main'); if (m) m.classList.add('acxsb-pad');
