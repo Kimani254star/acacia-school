@@ -23,15 +23,16 @@ const MODS=[
 ['Alumni',{FormerStudents:'Name|Graduation year|number|Phone',Records:'Name|Current work|Contact'}],
 ['Reports',null],
 ['Behaviour Records',{Discipline:'Student|Offence|Date|date|Action taken',Incidents:'Student|Incident|Date|date|Reported by',Conduct:'Student|Rating|s:Excellent,Good,Fair,Poor|Notes'}],
-['System Settings',{Users:'Name|Email|Role|s:Super Administrator,School Administrator,Head Teacher / Principal,Bursar / Accountant,Teacher,Class Teacher,Librarian,Receptionist,Transport Manager,Parent,Student',SchoolSettings:'Setting|Value',Appearance:'*'}]];
+['Settings',null]];
 const PORTALS={'Administration Portal':null,'Teacher Portal':['Dashboard','Academics','Examinations','Online Classes','Attendance','Behaviour Records'],'Student Portal':['Dashboard','Academics','Examinations','Online Classes','Library'],'Parent Portal':['Dashboard','Student Information','Attendance','Examinations','Fees & Finance'],'Finance Portal':['Dashboard','Fees & Finance','Inventory','Reports']};
 const parse=s=>{const p=s.split('|'),f=[];for(let i=0;i<p.length;i++){const l=p[i],t=p[i+1]||'text';if(/^(date|time|number)$/.test(t)||t.startsWith('s:')){f.push({l,t,o:t.startsWith('s:')?t.slice(2).split(','):0});i++}else f.push({l,t:'text'})}return f};
 const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const lab=s=>s.replace(/([a-z])([A-Z])/g,'$1 $2');
 let S;try{S=JSON.parse(localStorage.getItem('acacia_school_'+AcaciaLogin.companyId()))}catch(e){}
 if(!S)S={cur:'s1',schools:[{id:'s1',name:'My School'}],data:{s1:{}}};
-let mod='Dashboard',sub=null,portal='Administration Portal',q='';
+let mod='Dashboard',sub=null,portal='Administration Portal',q='',editing=null;
 const save=()=>{try{localStorage.setItem('acacia_school_'+AcaciaLogin.companyId(),JSON.stringify(S))}catch(e){}};
+try{AcaciaCloud.onRemote(function(){try{var x=JSON.parse(localStorage.getItem('acacia_school_'+AcaciaLogin.companyId()));if(x)S=x}catch(e){}},function(){render()})}catch(e){}
 const D=(m,s)=>{const d=S.data[S.cur],k=m+'/'+s;return d[k]||(d[k]=[])};
 const today=new Date().toISOString().slice(0,10),ym=today.slice(0,7);
 const K=n=>'KES '+n.toLocaleString();
@@ -53,8 +54,10 @@ function pick(v){if(v=='+'){const n=prompt('School name');if(n){const id='s'+Dat
 function go(m){mod=m;sub=null;q='';nav_close();render()}
 function nav_close(){document.getElementById('nav').classList.remove('open')}
 const nav_=document.getElementById('nav');
-function render(){nav();const el=document.getElementById('main'),M=MODS.find(m=>m[0]==mod),sch=S.schools.find(s=>s.id==S.cur).name;
+const SET_CFG={app:'School',store:()=>S,save:()=>save(),defaultType:'School',types:['School','College','University','Nursery / Kindergarten','Training Institute'],defaultRole:'Teacher',roles:['Administrator','Head Teacher / Principal','Bursar / Accountant','Teacher','Class Teacher','Librarian','Receptionist','Transport Manager']};
+function render(){editing=null;nav();const el=document.getElementById('main'),M=MODS.find(m=>m[0]==mod),sch=S.schools.find(s=>s.id==S.cur).name;
 let h='<div class="bar"><h1>'+mod+'</h1><span>'+E(sch)+' · '+portal+'</span></div>';
+if(mod=='Settings'){el.innerHTML=h+'<div id="acxSet"></div>';ACX_SET.mount(document.getElementById('acxSet'),SET_CFG);return}
 if(mod=='Dashboard'){
 const ev=D('Dashboard','Events').filter(r=>r[1]>=today).sort((a,b)=>a[1]<b[1]?-1:1),nt=D('Dashboard','Notices').slice().sort((a,b)=>a[1]<b[1]?1:-1),lv=D('Human Resources','Leave').filter(r=>r[1]<=today&&r[2]>=today);
 h+='<div class="grid">'+stats().map(s=>'<div class="st"><b>'+s[1]+'</b><span>'+s[0]+'</span></div>').join('')+'</div><div class="two"><div class="box"><h3>Fee collection and expenses</h3>'+chart()+'</div><div class="box"><h3>Notice board</h3>'+(nt.length?'<ul>'+nt.slice(0,6).map(r=>'<li><b>'+E(r[0])+'</b> ('+r[1]+') '+E(r[2])+'</li>').join('')+'</ul>':'<div class="empty">No notices yet. Add one under Dashboard → Notices.</div>')+'</div><div class="box"><h3>Upcoming events</h3>'+(ev.length?'<ul>'+ev.slice(0,6).map(r=>'<li><b>'+E(r[0])+'</b> – '+r[1]+', '+E(r[2])+'</li>').join('')+'</ul>':'<div class="empty">No upcoming events.</div>')+'</div><div class="box"><h3>Faculty on leave</h3>'+(lv.length?'<ul>'+lv.map(r=>'<li>'+E(r[0])+' until '+r[2]+' ('+E(r[3])+')</li>').join('')+'</ul>':'<div class="empty">Nobody is on leave today.</div>')+'</div></div>'}
@@ -67,8 +70,9 @@ if(M[1]&&M[1][sub]=='*')h=h.replace(/<div class="box"><form[\s\S]*$/,'<div data-
 el.innerHTML=h;if(document.getElementById('list'))list()}
 function list(){const M=MODS.find(m=>m[0]==mod),f=parse(M[1][sub]),L=document.getElementById('list');
 const rows=D(mod,sub).map((r,i)=>[r,i]).filter(([r])=>r.join(' ').toLowerCase().includes(q.toLowerCase()));
-L.innerHTML=rows.length?'<table><tr>'+f.map(x=>'<th>'+x.l+'</th>').join('')+'<th></th></tr>'+rows.map(([r,i])=>'<tr>'+r.map(c=>'<td>'+E(c)+'</td>').join('')+'<td><button class="del" onclick="rm('+i+')">Delete</button></td></tr>').join('')+'</table>':'<div class="empty">No records yet. Use the form above to add the first one.</div>'}
+L.innerHTML=rows.length?'<table><tr>'+f.map(x=>'<th>'+x.l+'</th>').join('')+'<th></th></tr>'+rows.map(([r,i])=>'<tr>'+r.map(c=>'<td>'+E(c)+'</td>').join('')+'<td>'+ACX_ACT({edit:'editRow('+i+')',del:'rm('+i+')',title:lab(sub)+' record'})+'</td></tr>').join('')+'</table>':'<div class="empty">No records yet. Use the form above to add the first one.</div>'}
 function add(e){e.preventDefault();const M=MODS.find(m=>m[0]==mod),f=parse(M[1][sub]),fd=new FormData(e.target);
-D(mod,sub).unshift(f.map((x,i)=>x.t=='number'?Number(fd.get('f'+i)):fd.get('f'+i)));save();render()}
+const row=f.map((x,i)=>x.t=='number'?Number(fd.get('f'+i)):fd.get('f'+i));if(editing!=null){D(mod,sub)[editing]=row;editing=null}else D(mod,sub).unshift(row);save();render()}
+function editRow(i){const M=MODS.find(m=>m[0]==mod),f=parse(M[1][sub]),r=D(mod,sub)[i],fm=document.querySelector('#main form');if(!fm||!r)return;editing=i;f.forEach((x,j)=>{const el=fm.elements['f'+j];if(el)el.value=r[j]==null?'':r[j]});const b=fm.querySelector('button.btn');if(b)b.textContent='Save changes';fm.scrollIntoView({behavior:'smooth',block:'center'})}
 function rm(i){if(confirm('Delete this record?')){D(mod,sub).splice(i,1);save();render()}}
 render();

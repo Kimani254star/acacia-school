@@ -62,6 +62,7 @@
       try { u = await AcaciaCloud.signIn(email, pass, company); }
       catch (err) { return show($('siError'), err.code === 'blocked' ? err.message : 'Could not reach Acacia. Check your internet connection and try again.'); }
       if (!u) return show($('siError'), 'That email and password combination was not found.');
+      var gm = await cloudStart(u); if (gm) return show($('siError'), gm);
       localStorage.setItem(KEY, JSON.stringify({ email: u.email, name: u.name, companyId: u.companyId, companyName: u.company })); location.reload();
     };
     $('aclSu').onsubmit = async function (e) {
@@ -73,6 +74,7 @@
       try { r = await AcaciaCloud.register({ company: company, name: name, email: email, password: pass, plan: $('regPlan').value, billing: $('regBilling').value }); }
       catch (err) { return show($('suError'), err.code === 'exists' ? 'This company already has an account with that email - use Sign In instead.' : (err.code === 'offline' ? 'Could not reach Acacia. Check your internet connection and try again.' : (err.message || 'Could not create the account.'))); }
       if (r.blocked) return show($('suError'), 'Account created. ' + r.blocked);
+      await cloudStart({ companyId: r.companyId, email: email, role: 'Administrator' });
       localStorage.setItem(KEY, JSON.stringify({ email: email, name: name, companyId: r.companyId, companyName: company })); location.reload();
     };
   }
@@ -80,14 +82,27 @@
     var f = document.createElement('iframe'); f.id = 'aclLand'; f.src = cfg.landing; f.title = 'Acacia'; f.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:0;z-index:90;background:#fff';
     document.body.appendChild(f); return f;
   }
+  /* the localStorage key each app really saves its data under (one blob per company) - this is what gets synced to the cloud */
+  var DATA_PREFIX = { school: 'acacia_school_', hospital: 'acacia_hosp2_', meet: 'acacia_meet_' };
+  function dataKey(x) { return (DATA_PREFIX[cfg && cfg.app] || ('acacia_' + (cfg && cfg.app) + '_')) + x; }
+  /* load this company's data from the cloud into this browser; returns the gate message if the company is blocked, '' otherwise */
+  async function cloudStart(u) {
+    var st = '';
+    try { st = await AcaciaCloud.start({ companyId: u.companyId, email: u.email, role: u.role || '' }); } catch (e) {}
+    return /^blocked:/.test(st) ? st.slice(8) : '';
+  }
   function init(c) {
-    cfg = c; AcaciaCloud.init({ app: c.app, dataKey: function (x) { return 'acx_' + c.app + '_local_' + x; } });
+    cfg = c; AcaciaCloud.init({ app: c.app, dataKey: dataKey });
     style(); var s = ses();
     if (!s) { build(); return; }
     var b = document.createElement('button'); b.id = 'aclOut'; b.type = 'button'; b.textContent = 'Sign out'; b.title = (s.name || s.email) + ' \u00b7 ' + (s.companyName || '');
     b.onclick = function () { try { AcaciaCloud.stop(); } catch (e) {} localStorage.removeItem(KEY); location.reload(); };
     document.body.appendChild(b);
     var m = document.querySelector('main'); if (m) m.classList.add('acxsb-pad');
+    /* load this company's data, then keep it in step with other devices (the engine polls every 30s and merges changes) */
+    cloudStart({ companyId: s.companyId, email: s.email }).then(function (gm) {
+      if (gm) { alert(gm); try { AcaciaCloud.stop(); } catch (e) {} localStorage.removeItem(KEY); location.reload(); }
+    });
   }
   w.AcaciaLogin = { init: init, session: ses, companyId: function () { var s = ses(); return s ? s.companyId : 'guest'; } };
 })(window);
